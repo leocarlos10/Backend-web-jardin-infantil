@@ -12,5 +12,4 @@ public class prueba {
     public String mensaje() {
         return "Server Working";
     }
-
 }

@@ -1,0 +1,12 @@
+CREATE TABLE pago_matricula (
+    id_pago BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id_matricula BIGINT NOT NULL,
+    mes VARCHAR(20) NOT NULL,
+    fecha_pago DATE NOT NULL,
+    estado ENUM('PAGADO','NO_PAGADO','PENDIENTE') NOT NULL,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_pago_matricula FOREIGN KEY (id_matricula) REFERENCES matricula(id_matricula)
+);
