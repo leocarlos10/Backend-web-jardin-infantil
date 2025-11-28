@@ -4,28 +4,30 @@ import com.jardininfantil.web_institucional.models.enums.RolUsuario;
 import lombok.Getter;
 import lombok.Setter;
 
+@Getter
+@Setter
 public class Usuario {
-    
-    @Getter @Setter
+
+    private Long usuarioId;
     private String nombreUsuario;
-    @Getter @Setter
     private String correo;
-    @Getter @Setter
     private String password;
-    @Getter @Setter
     private RolUsuario tipo_Usuario;
+    private Boolean isActive;
 
     // Constructor vacío
-    public Usuario() {
-    }
+    public Usuario() {}
 
     // Constructor con todos los parámetros
-    public Usuario(String nombreUsuario, String correo, String password, RolUsuario tipo_Usuario) {
+    public Usuario(
+        String nombreUsuario,
+        String correo,
+        String password,
+        RolUsuario tipo_Usuario
+    ) {
         this.nombreUsuario = nombreUsuario;
         this.correo = correo;
         this.password = password;
         this.tipo_Usuario = tipo_Usuario;
     }
-
-    
 }
