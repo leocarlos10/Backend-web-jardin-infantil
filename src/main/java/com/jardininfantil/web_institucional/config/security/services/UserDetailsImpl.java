@@ -48,7 +48,7 @@ public class UserDetailsImpl implements UserDetails {
         RolUsuario rol = user.getTipo_Usuario();
 
         List<GrantedAuthority> authorities = List.of(
-            new SimpleGrantedAuthority(rol.toString())
+            new SimpleGrantedAuthority("ROLE_" + rol.toString())
         );
 
         return new UserDetailsImpl(

@@ -51,7 +51,7 @@ public class UserRepositoryImpl implements UserRepository {
             usuario.getNombreUsuario(),
             usuario.getCorreo(),
             usuario.getPassword(),
-            usuario.getTipo_Usuario().toString(), // Asumiendo que es un Enum
+            usuario.getTipo_Usuario().toString(),
             usuario.getIsActive()
         );
     }

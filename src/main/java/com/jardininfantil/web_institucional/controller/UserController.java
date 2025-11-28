@@ -1,10 +1,12 @@
 package com.jardininfantil.web_institucional.controller;
 
+import com.jardininfantil.web_institucional.dto.common.Response;
 import com.jardininfantil.web_institucional.dto.user.LoginRequest;
 import com.jardininfantil.web_institucional.dto.user.RegisterRequest;
+import com.jardininfantil.web_institucional.dto.user.RegisterResponse;
 import com.jardininfantil.web_institucional.service.UserService;
-
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,12 +29,21 @@ public class UserController {
     ) {
         return ResponseEntity.ok(userService.login(request, null));
     }
-   
+
     @PostMapping("/register")
-    public ResponseEntity<Object> register(
+    public ResponseEntity<Response<RegisterResponse>> register(
         @Valid @RequestBody RegisterRequest request
     ) {
-        return ResponseEntity.ok(userService.register(request));
+        RegisterResponse registerData = userService.register(request);
+
+        Response<RegisterResponse> responseBody = Response.<
+                RegisterResponse
+            >builder()
+            .responseCode(HttpStatus.CREATED.value())
+            .responseMessage("SUCCESS")
+            .data(registerData)
+            .build();
+
+        return new ResponseEntity<>(responseBody, HttpStatus.CREATED);
     }
-   
 }

@@ -15,6 +15,7 @@ public class prueba {
         return "Server Working";
     }
 
+    @PreAuthorize("hasRole('ROLE_ACUDIENTE')")
     @GetMapping("/user")
     public ResponseEntity<?> user() {
         return ResponseEntity.ok("OK");

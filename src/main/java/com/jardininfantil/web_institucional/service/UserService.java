@@ -45,7 +45,7 @@ public class UserService {
     JwtUtils jwtUtils;
 
     @Transactional
-    public Response<Object> register(RegisterRequest request) {
+    public RegisterResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
@@ -73,13 +73,9 @@ public class UserService {
         RegisterResponse registerUserResponse = RegisterResponse.builder()
             .name(user.getNombreUsuario())
             .email(user.getCorreo())
-            .build();
-
-        return Response.builder()
-            .responseCode(200)
-            .responseMessage("SUCCESS")
-            .data(registerUserResponse)
-            .build();
+            .build();   
+            
+        return registerUserResponse;
     }
 
     @Transactional
