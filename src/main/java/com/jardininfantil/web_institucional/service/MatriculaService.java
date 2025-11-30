@@ -6,6 +6,8 @@ import com.jardininfantil.web_institucional.exception.NotFoundException;
 import com.jardininfantil.web_institucional.models.Estudiante;
 import com.jardininfantil.web_institucional.models.Matricula;
 import com.jardininfantil.web_institucional.models.enums.EstadoMatricula;
+import com.jardininfantil.web_institucional.pattern.observer.EventManager;
+import com.jardininfantil.web_institucional.pattern.observer.EventType;
 import com.jardininfantil.web_institucional.repository.EstudianteRepository;
 import com.jardininfantil.web_institucional.repository.MatriculaRepository;
 import org.springframework.stereotype.Service;
@@ -18,10 +20,14 @@ public class MatriculaService {
 
     private final MatriculaRepository matriculaRepository;
     private final EstudianteRepository estudianteRepository;
+    private final EventManager eventManager;
 
-    public MatriculaService(MatriculaRepository matriculaRepository, EstudianteRepository estudianteRepository) {
+    public MatriculaService(MatriculaRepository matriculaRepository, 
+                           EstudianteRepository estudianteRepository,
+                           EventManager eventManager) {
         this.matriculaRepository = matriculaRepository;
         this.estudianteRepository = estudianteRepository;
+        this.eventManager = eventManager;
     }
 
     public MatriculaResponse crearMatricula(MatriculaRequest request) {
@@ -38,6 +44,10 @@ public class MatriculaService {
         matricula.setEstadoMatricula(EstadoMatricula.ACTIVA);
 
         Matricula savedMatricula = matriculaRepository.save(matricula);
+        
+        // Notificar evento usando patrón Observer
+        eventManager.notify(EventType.MATRICULA_CREADA.getValue(), savedMatricula);
+        
         return mapToResponse(savedMatricula, estudiante.getNombre() + " " + estudiante.getApellido());
     }
 
@@ -83,6 +93,9 @@ public class MatriculaService {
 
         matricula.setEstadoMatricula(EstadoMatricula.CANCELADA);
         matriculaRepository.update(matricula);
+
+        // Notificar evento usando patrón Observer
+        eventManager.notify(EventType.MATRICULA_CANCELADA.getValue(), matricula);
 
         return mapToResponseSimple(matricula);
     }

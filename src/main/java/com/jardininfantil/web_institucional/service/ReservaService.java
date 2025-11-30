@@ -6,6 +6,8 @@ import com.jardininfantil.web_institucional.exception.NotFoundException;
 import com.jardininfantil.web_institucional.models.Estudiante;
 import com.jardininfantil.web_institucional.models.Reserva;
 import com.jardininfantil.web_institucional.models.enums.EstadoReserva;
+import com.jardininfantil.web_institucional.pattern.observer.EventManager;
+import com.jardininfantil.web_institucional.pattern.observer.EventType;
 import com.jardininfantil.web_institucional.repository.EstudianteRepository;
 import com.jardininfantil.web_institucional.repository.ReservaRepository;
 import org.springframework.stereotype.Service;
@@ -18,10 +20,14 @@ public class ReservaService {
 
     private final ReservaRepository reservaRepository;
     private final EstudianteRepository estudianteRepository;
+    private final EventManager eventManager;
 
-    public ReservaService(ReservaRepository reservaRepository, EstudianteRepository estudianteRepository) {
+    public ReservaService(ReservaRepository reservaRepository, 
+                         EstudianteRepository estudianteRepository,
+                         EventManager eventManager) {
         this.reservaRepository = reservaRepository;
         this.estudianteRepository = estudianteRepository;
+        this.eventManager = eventManager;
     }
 
     public ReservaResponse crearReserva(ReservaRequest request) {
@@ -35,6 +41,10 @@ public class ReservaService {
         reserva.setEstadoReserva(EstadoReserva.PENDIENTE);
 
         Reserva savedReserva = reservaRepository.save(reserva);
+        
+        // Notificar evento usando patrón Observer
+        eventManager.notify(EventType.RESERVA_CREADA.getValue(), savedReserva);
+        
         return mapToResponse(savedReserva, estudiante.getNombre() + " " + estudiante.getApellido());
     }
 
@@ -68,6 +78,9 @@ public class ReservaService {
         reserva.setEstadoReserva(EstadoReserva.ACEPTADA);
         reservaRepository.update(reserva);
 
+        // Notificar evento usando patrón Observer
+        eventManager.notify(EventType.RESERVA_APROBADA.getValue(), reserva);
+
         return mapToResponseSimple(reserva);
     }
 
@@ -77,6 +90,9 @@ public class ReservaService {
 
         reserva.setEstadoReserva(EstadoReserva.RECHAZADA);
         reservaRepository.update(reserva);
+
+        // Notificar evento usando patrón Observer
+        eventManager.notify(EventType.RESERVA_RECHAZADA.getValue(), reserva);
 
         return mapToResponseSimple(reserva);
     }

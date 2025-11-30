@@ -1,0 +1,219 @@
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                    API REST - JARDÍN INFANTIL CARRUSEL                        ║
+║                         Documentación Completa                                ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+📍 BASE URL: http://localhost:8080/api/v1
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           🔑 AUTENTICACIÓN                                  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+POST   /auth/register          Registrar nuevo usuario
+POST   /auth/login             Iniciar sesión (obtener token JWT)
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           📝 RESERVAS (6 endpoints)                         │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+POST   /reservas                      Crear reserva de cupo
+GET    /reservas/{id}                 Obtener reserva por ID
+GET    /reservas                      Listar todas (ADMIN)
+GET    /reservas/estudiante/{id}      Listar por estudiante
+PUT    /reservas/{id}/aprobar         Aprobar reserva (ADMIN)
+PUT    /reservas/{id}/rechazar        Rechazar reserva (ADMIN)
+
+Estados: PENDIENTE → ACEPTADA / RECHAZADA
+Eventos: RESERVA_CREADA, RESERVA_APROBADA, RESERVA_RECHAZADA
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           🎓 MATRÍCULAS (6 endpoints)                       │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+POST   /matriculas                    Crear matrícula
+GET    /matriculas/{id}               Obtener matrícula por ID
+GET    /matriculas                    Listar todas (ADMIN)
+GET    /matriculas/estudiante/{id}    Listar por estudiante
+PUT    /matriculas/{id}               Actualizar matrícula
+PUT    /matriculas/{id}/cancelar      Cancelar matrícula (ADMIN)
+
+Estados: ACTIVA → CANCELADA
+Eventos: MATRICULA_CREADA, MATRICULA_CANCELADA
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           💰 PAGOS (6 endpoints)                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+POST   /pagos                         Registrar pago
+GET    /pagos/{id}                    Obtener pago por ID
+GET    /pagos/matricula/{id}          Listar pagos por matrícula
+GET    /pagos                         Listar todos (ADMIN)
+PUT    /pagos/{id}/verificar          Verificar pago (ADMIN)
+PUT    /pagos/{id}/rechazar           Rechazar pago (ADMIN)
+
+Estados: PENDIENTE → VERIFICADO / RECHAZADO
+Eventos: PAGO_REGISTRADO, PAGO_VERIFICADO, PAGO_RECHAZADO
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           👨‍👩‍👧‍👦 ESTUDIANTES (6 endpoints)                    │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+POST   /estudiantes                   Crear estudiante
+GET    /estudiantes/{id}              Obtener estudiante por ID
+GET    /estudiantes                   Listar todos (ADMIN)
+GET    /estudiantes/acudiente/{id}    Listar por acudiente
+PUT    /estudiantes/{id}              Actualizar estudiante
+DELETE /estudiantes/{id}              Eliminar estudiante (ADMIN)
+
+Eventos: ESTUDIANTE_CREADO, ESTUDIANTE_ACTUALIZADO
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           📊 RESUMEN                                        │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Total Endpoints:        26
+Módulos:                5 (Auth, Reservas, Matrículas, Pagos, Estudiantes)
+Eventos del Sistema:    10
+Roles:                  3 (USUARIO, ACUDIENTE, ADMINISTRADOR)
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           🔒 AUTENTICACIÓN                                  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Todos los endpoints (excepto /auth/*) requieren:
+
+Header: Authorization: Bearer <token_jwt>
+
+Obtener token:
+  1. POST /auth/login con email y password
+  2. Guardar el token de la respuesta
+  3. Incluir en todas las peticiones
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           📋 FORMATO DE RESPUESTA                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Todas las respuestas siguen este formato:
+
+{
+  "responseCode": 200,
+  "responseMessage": "Mensaje descriptivo",
+  "data": { ... },
+  "errorList": null
+}
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           🎯 CÓDIGOS HTTP                                   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+200 OK              Operación exitosa
+201 Created         Recurso creado
+400 Bad Request     Datos inválidos
+401 Unauthorized    Token inválido
+403 Forbidden       Sin permisos
+404 Not Found       No encontrado
+409 Conflict        Conflicto (duplicado)
+500 Server Error    Error del servidor
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           🎯 EVENTOS DEL SISTEMA                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Patrón Observer implementado - Los eventos se notifican automáticamente:
+
+RESERVA_CREADA          → Logging, Statistics
+RESERVA_APROBADA        → Logging, Email, Statistics
+RESERVA_RECHAZADA       → Logging, Email, Statistics
+MATRICULA_CREADA        → Logging, Email, Statistics
+MATRICULA_CANCELADA     → Logging, Statistics
+PAGO_REGISTRADO         → Logging, Statistics
+PAGO_VERIFICADO         → Logging, Email, Statistics
+PAGO_RECHAZADO          → Logging, Email, Statistics
+ESTUDIANTE_CREADO       → Logging, Statistics
+ESTUDIANTE_ACTUALIZADO  → Logging, Statistics
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           🌱 DATOS DE PRUEBA                                │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Usuarios:
+  admin@jardin.test / password123 (ADMINISTRADOR)
+  acudiente1@test.com / password123 (ACUDIENTE)
+  acudiente2@test.com / password123 (ACUDIENTE)
+
+Datos incluidos:
+  - 3 Usuarios
+  - 2 Acudientes
+  - 3 Estudiantes
+  - 3 Reservas
+  - 2 Matrículas
+  - 3 Pagos
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           📚 DOCUMENTACIÓN                                  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+API_DOCUMENTACION_COMPLETA.md    Documentación completa de todos los endpoints
+API_EJEMPLOS_POSTMAN.md          Colección para Postman/Insomnia
+DATOS_SEMILLA.md                 Guía de datos de prueba
+PATRON_OBSERVER_DOCUMENTACION.md Documentación del patrón implementado
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           🚀 INICIO RÁPIDO                                  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+1. Iniciar aplicación:
+   mvn spring-boot:run -Dspring-boot.run.profiles=dev
+
+2. Login:
+   POST http://localhost:8080/api/v1/auth/login
+   Body: {"email": "admin@jardin.test", "password": "password123"}
+
+3. Guardar token de la respuesta
+
+4. Usar token en todas las peticiones:
+   Header: Authorization: Bearer <token>
+
+5. Probar endpoints según necesidad
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           📞 EJEMPLO COMPLETO                               │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+# 1. Login
+curl -X POST http://localhost:8080/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"admin@jardin.test","password":"password123"}'
+
+# 2. Crear Reserva (usar token de respuesta anterior)
+curl -X POST http://localhost:8080/api/v1/reservas \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{"estudianteId":1,"gradoSolicitado":"Jardín"}'
+
+# 3. Aprobar Reserva
+curl -X PUT http://localhost:8080/api/v1/reservas/1/aprobar \
+  -H "Authorization: Bearer <token>"
+
+# 4. Crear Matrícula
+curl -X POST http://localhost:8080/api/v1/matriculas \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "estudianteId":1,
+    "fecha":"2024-01-15",
+    "grado":"Jardín",
+    "valorTotal":1500000.00,
+    "contratoFirmado":1500000.00
+  }'
+
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                    ✅ API COMPLETAMENTE DOCUMENTADA                           ║
+║                                                                               ║
+║  📦 26 endpoints documentados                                                 ║
+║  📝 Request/Response de cada uno                                              ║
+║  🎯 Eventos del sistema                                                       ║
+║  🔒 Roles y permisos                                                          ║
+║  🧪 Ejemplos con curl y Postman                                               ║
+║  🌱 Datos de prueba incluidos                                                 ║
+╚═══════════════════════════════════════════════════════════════════════════════╝

@@ -75,3 +75,85 @@ Nuevo camibo en el sistema de rol de un usuario ahora el sistema maneja tres tip
 Al registrarse mediante `/api/v1/auth/register`, los usuarios reciben automáticamente el rol `USUARIO`. Este rol permite acceso básico al sistema sin permisos administrativos ni de acudiente.
 
 Para asignar roles específicos (ACUDIENTE o ADMINISTRADOR), esto debe hacerse posteriormente a través de funcionalidades administrativas o procesos específicos del sistema.
+
+## 🎯 Patrón de Diseño Implementado: Observer
+
+Este proyecto implementa el **Patrón Observer** para gestionar un sistema de notificaciones y eventos desacoplado.
+
+### ¿Qué es el Patrón Observer?
+
+El Patrón Observer permite que múltiples objetos (observadores) sean notificados automáticamente cuando ocurre un evento en el sistema, sin que el código que genera el evento necesite conocer los detalles de los observadores.
+
+### Componentes Implementados
+
+```
+pattern/observer/
+├── EventManager.java              # Gestor central de eventos (Subject)
+├── EventListener.java             # Interfaz para observadores
+├── EventType.java                 # 10 eventos del sistema
+├── ObserverConfig.java            # Configuración Spring
+└── listeners/
+    ├── LoggingListener.java       # Auditoría de eventos
+    ├── EmailNotificationListener.java  # Notificaciones email
+    └── StatisticsListener.java    # Métricas y estadísticas
+```
+
+### Servicios Integrados
+
+✅ **ReservaService** - Notifica: RESERVA_CREADA, RESERVA_APROBADA, RESERVA_RECHAZADA  
+✅ **MatriculaService** - Notifica: MATRICULA_CREADA, MATRICULA_CANCELADA  
+✅ **PagoService** - Notifica: PAGO_REGISTRADO, PAGO_VERIFICADO, PAGO_RECHAZADO  
+✅ **EstudianteService** - Notifica: ESTUDIANTE_CREADO, ESTUDIANTE_ACTUALIZADO
+
+### Ejemplo de Uso
+
+```java
+// En cualquier servicio
+public ReservaResponse aprobarReserva(Long id) {
+    // 1. Lógica de negocio
+    reserva.setEstadoReserva(EstadoReserva.ACEPTADA);
+    reservaRepository.update(reserva);
+    
+    // 2. Notificar evento - todos los listeners reaccionan automáticamente
+    eventManager.notify(EventType.RESERVA_APROBADA.getValue(), reserva);
+    
+    return mapToResponseSimple(reserva);
+}
+
+// Resultado automático:
+// → LoggingListener registra en logs
+// → EmailListener envía email al acudiente
+// → StatisticsListener incrementa contador
+```
+
+### Ventajas
+
+✅ **Desacoplamiento**: Los servicios no conocen los detalles de notificación  
+✅ **Extensibilidad**: Agregar nuevos listeners sin modificar código existente  
+✅ **Mantenibilidad**: Cada listener tiene una única responsabilidad  
+✅ **Escalabilidad**: Fácil agregar nuevos canales (SMS, WhatsApp, Webhooks)
+
+### Documentación Completa
+
+📖 **[PATRON_OBSERVER_DOCUMENTACION.md](PATRON_OBSERVER_DOCUMENTACION.md)** - Documentación completa del patrón implementado
+
+## 📚 Documentación Completa
+
+### 📖 Índice General
+**[INDICE_DOCUMENTACION.md](INDICE_DOCUMENTACION.md)** - Índice completo de toda la documentación del proyecto
+
+### 🌐 Documentación de la API
+
+📖 **[API_DOCUMENTACION_COMPLETA.md](API_DOCUMENTACION_COMPLETA.md)** - Documentación completa de todos los endpoints  
+📮 **[API_EJEMPLOS_POSTMAN.md](API_EJEMPLOS_POSTMAN.md)** - Colección de ejemplos para Postman/Insomnia  
+📊 **[API_RESUMEN_VISUAL.txt](API_RESUMEN_VISUAL.txt)** - Resumen visual de la API
+
+### Endpoints Principales
+
+- **Autenticación**: `/api/v1/auth/login`, `/api/v1/auth/register`
+- **Reservas**: `/api/v1/reservas` (6 endpoints)
+- **Matrículas**: `/api/v1/matriculas` (6 endpoints)
+- **Pagos**: `/api/v1/pagos` (6 endpoints)
+- **Estudiantes**: `/api/v1/estudiantes` (6 endpoints)
+
+**Total**: 26 endpoints documentados con ejemplos de request/response
