@@ -19,13 +19,11 @@ public class LoggingListener implements EventListener {
     @Override
     public void update(String eventType, Object data) {
         String timestamp = LocalDateTime.now().toString();
-        logger.info("📝 [AUDIT] {} - Evento: {} | Datos: {}", timestamp, eventType, data);
-    
         saveToAuditLog(eventType, data, timestamp);
     }
 
     // TODO: guardar en la base de datos los enventos del sistema para llavar un control
     private void saveToAuditLog(String eventType, Object data, String timestamp) {  
-        logger.debug("Guardando en log de auditoría: {} - {}", eventType, timestamp);
+        logger.info("Guardando en log de auditoría: {} - {}", eventType, timestamp);
     }
 }

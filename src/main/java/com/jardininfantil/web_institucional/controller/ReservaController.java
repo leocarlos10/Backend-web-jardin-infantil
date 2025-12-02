@@ -22,7 +22,7 @@ public class ReservaController {
         this.reservaService = reservaService;
     }
 
-    @PostMapping
+    @PostMapping("/crear")
     public ResponseEntity<Response<ReservaResponse>> crearReserva(@Valid @RequestBody ReservaRequest request) {
         ReservaResponse reserva = reservaService.crearReserva(request);
         Response<ReservaResponse> response = Response.<ReservaResponse>builder()
@@ -33,7 +33,7 @@ public class ReservaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping
+    @GetMapping("/obtenerTodas")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Response<List<ReservaResponse>>> listarTodasReservas() {
         List<ReservaResponse> reservas = reservaService.listarTodasReservas();

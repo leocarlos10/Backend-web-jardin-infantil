@@ -1,6 +1,8 @@
 package com.jardininfantil.web_institucional.pattern.observer.listeners;
 
 import com.jardininfantil.web_institucional.pattern.observer.EventListener;
+import com.jardininfantil.web_institucional.service.EmailService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -13,15 +15,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Component
 public class EmailNotificationListener implements EventListener {
-
+    
+    private final EmailService emailService;
+    
     @Override
     public void update(String eventType, Object data) {
-        log.info(
-            "Email enviado para evento: {} | Datos recibidos: {}",
-            eventType,
-            data
-        );
-
         switch (eventType) {
             case "reserva.aprobada" -> sendReservaAprobadaEmail(data);
             case "reserva.rechazada" -> sendReservaRechazadaEmail(data);
@@ -39,6 +37,10 @@ public class EmailNotificationListener implements EventListener {
         }
     }
 
+    private void sendBienvenidaRegistroEmail(Object data) {
+        emailService.sendVerificationEmail(data);
+    }
+    
     private void sendReservaAprobadaEmail(Object data) {
         log.info("Enviando email: Reserva aprobada");
     }
@@ -63,9 +65,6 @@ public class EmailNotificationListener implements EventListener {
         log.info("Enviando email: Pago rechazado – solicita nuevo comprobante");
     }
 
-    private void sendBienvenidaRegistroEmail(Object data) {
-        log.info("Enviando email: Gracias por registrarte en Jardín Arcoíris");
-    }
 
     private void sendCupoAgotadoEmail(Object data) {
         log.info(

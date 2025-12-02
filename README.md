@@ -14,6 +14,14 @@ DB_USER=root
 DB_PASS=password
 ```
 
+Aagregar las contrasena se application y correo en las variables de entorno. 
+correlo electronico y contrasena de application. 
+```
+CORREO_ELECTRONICO=app@gmail.com 
+PASSWORD_EMAIL_APLICATION=abcdef bdedf
+```
+
+
 Para poder correr la app con esas configuraciones.
 
 ```
