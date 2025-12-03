@@ -6,6 +6,8 @@ import com.jardininfantil.web_institucional.exception.DataExistException;
 import com.jardininfantil.web_institucional.exception.NotFoundException;
 import com.jardininfantil.web_institucional.models.Acudiente;
 import com.jardininfantil.web_institucional.models.Estudiante;
+import com.jardininfantil.web_institucional.pattern.observer.EventManager;
+import com.jardininfantil.web_institucional.pattern.observer.EventType;
 import com.jardininfantil.web_institucional.repository.AcudienteRepository;
 import com.jardininfantil.web_institucional.repository.EstudianteRepository;
 import org.springframework.stereotype.Service;
@@ -18,10 +20,14 @@ public class EstudianteService {
 
     private final EstudianteRepository estudianteRepository;
     private final AcudienteRepository acudienteRepository;
+    private final EventManager eventManager;
 
-    public EstudianteService(EstudianteRepository estudianteRepository, AcudienteRepository acudienteRepository) {
+    public EstudianteService(EstudianteRepository estudianteRepository, 
+                            AcudienteRepository acudienteRepository,
+                            EventManager eventManager) {
         this.estudianteRepository = estudianteRepository;
         this.acudienteRepository = acudienteRepository;
+        this.eventManager = eventManager;
     }
 
     public EstudianteResponse crearEstudiante(EstudianteRequest request) {
@@ -60,6 +66,10 @@ public class EstudianteService {
         estudiante.setTipoEstudiante(request.getTipoEstudiante());
 
         Estudiante savedEstudiante = estudianteRepository.save(estudiante);
+        
+        // Notificar evento usando patrón Observer
+        eventManager.notify(EventType.ESTUDIANTE_CREADO.getValue(), savedEstudiante);
+        
         return mapToResponse(savedEstudiante, acudiente.getNombre() + " " + acudiente.getApellido());
     }
 
@@ -105,6 +115,10 @@ public class EstudianteService {
         estudiante.setTipoEstudiante(request.getTipoEstudiante());
 
         estudianteRepository.update(estudiante);
+        
+        // Notificar evento usando patrón Observer
+        eventManager.notify(EventType.ESTUDIANTE_ACTUALIZADO.getValue(), estudiante);
+        
         return mapToResponseSimple(estudiante);
     }
 

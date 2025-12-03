@@ -10,6 +10,8 @@ import com.jardininfantil.web_institucional.dto.user.RegisterResponse;
 import com.jardininfantil.web_institucional.dto.user.UserResponse;
 import com.jardininfantil.web_institucional.models.Usuario;
 import com.jardininfantil.web_institucional.models.enums.RolUsuario;
+import com.jardininfantil.web_institucional.pattern.observer.EventManager;
+import com.jardininfantil.web_institucional.pattern.observer.EventType;
 import com.jardininfantil.web_institucional.repository.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
@@ -31,18 +33,21 @@ public class UserService {
         UserRepository userRepository,
         PasswordEncoder encoder,
         AuthenticationManager authenticationManager,
-        JwtUtils jwtUtils
+        JwtUtils jwtUtils,
+        EventManager eventManager
     ) {
         this.userRepository = userRepository;
         this.encoder = encoder;
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
+        this.eventManager = eventManager;
     }
 
     UserRepository userRepository;
     PasswordEncoder encoder;
     AuthenticationManager authenticationManager;
     JwtUtils jwtUtils;
+    private final EventManager eventManager;
 
     @Transactional
     public RegisterResponse register(RegisterRequest request) {
@@ -64,6 +69,7 @@ public class UserService {
 
         try {
             userRepository.save(user);
+            eventManager.notify(EventType.REGISTRO_CREADO.getValue(), user);
         } catch (Exception e) {
             throw new RuntimeException(
                 "Error al guardar usuario: " + e.getMessage()
@@ -73,8 +79,8 @@ public class UserService {
         RegisterResponse registerUserResponse = RegisterResponse.builder()
             .name(user.getNombreUsuario())
             .email(user.getCorreo())
-            .build();   
-            
+            .build();
+
         return registerUserResponse;
     }
 

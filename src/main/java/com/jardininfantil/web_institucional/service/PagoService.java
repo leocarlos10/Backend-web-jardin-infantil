@@ -5,6 +5,8 @@ import com.jardininfantil.web_institucional.dto.pago.PagoResponse;
 import com.jardininfantil.web_institucional.exception.NotFoundException;
 import com.jardininfantil.web_institucional.models.PagoMatricula;
 import com.jardininfantil.web_institucional.models.enums.EstadoPago;
+import com.jardininfantil.web_institucional.pattern.observer.EventManager;
+import com.jardininfantil.web_institucional.pattern.observer.EventType;
 import com.jardininfantil.web_institucional.repository.MatriculaRepository;
 import com.jardininfantil.web_institucional.repository.PagoRepository;
 import org.springframework.stereotype.Service;
@@ -17,10 +19,14 @@ public class PagoService {
 
     private final PagoRepository pagoRepository;
     private final MatriculaRepository matriculaRepository;
+    private final EventManager eventManager;
 
-    public PagoService(PagoRepository pagoRepository, MatriculaRepository matriculaRepository) {
+    public PagoService(PagoRepository pagoRepository, 
+                      MatriculaRepository matriculaRepository,
+                      EventManager eventManager) {
         this.pagoRepository = pagoRepository;
         this.matriculaRepository = matriculaRepository;
+        this.eventManager = eventManager;
     }
 
     public PagoResponse registrarPago(PagoRequest request) {
@@ -38,6 +44,9 @@ public class PagoService {
         pago.setEstadoPago(EstadoPago.PENDIENTE);
 
         PagoMatricula savedPago = pagoRepository.save(pago);
+        
+        eventManager.notify(EventType.PAGO_REGISTRADO.getValue(), savedPago);
+        
         return mapToResponse(savedPago);
     }
 
@@ -67,6 +76,9 @@ public class PagoService {
         pago.setEstadoPago(EstadoPago.VERIFICADO);
         pagoRepository.update(pago);
 
+        // Notificar evento usando patrón Observer
+        eventManager.notify(EventType.PAGO_VERIFICADO.getValue(), pago);
+
         return mapToResponse(pago);
     }
 
@@ -76,6 +88,9 @@ public class PagoService {
 
         pago.setEstadoPago(EstadoPago.RECHAZADO);
         pagoRepository.update(pago);
+
+        // Notificar evento usando patrón Observer
+        eventManager.notify(EventType.PAGO_RECHAZADO.getValue(), pago);
 
         return mapToResponse(pago);
     }
