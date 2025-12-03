@@ -1,10 +1,9 @@
 package com.jardininfantil.web_institucional.service;
 
+import com.jardininfantil.web_institucional.api.email.EmailServiceApi;
 import com.jardininfantil.web_institucional.models.Usuario;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -12,23 +11,26 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class EmailService {
 
-    private final JavaMailSender mailSender;
+    private final EmailServiceApi emailService; 
 
     public void sendVerificationEmail(Object data) {
         Usuario registroData = (Usuario) data;
+        String correo = registroData.getCorreo();
 
-        String recipientEmail = registroData.getCorreo();
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(recipientEmail);
-        message.setSubject("Cuenta creada Jardín Infantil");
-        message.setText(
-            String.format(
-                "Hola,\n\nGracias por registrarte en el Centro educativo Jardín Infantil Carrusel Aventuras. Ya puedes solicitar una reserva."
-            )
-        );
+        String subject = "Cuenta creada Jardín Infantil";
+        String body = """
+                Hola,
 
-        mailSender.send(message);
-        log.info("✅ Correo de verificación ENVIADO a: {}", recipientEmail);
+                Gracias por registrarte en el Centro educativo Jardín Infantil Carrusel Aventuras.
+                Ya puedes solicitar una reserva.
+                """;
+
+        try {
+            emailService.send(correo, subject, body);
+            log.info("✅ Email enviado a {}", correo);
+        } catch (Exception e) {
+            log.error("❌ Error enviando email a {}", correo, e);
+        }
     }
 }

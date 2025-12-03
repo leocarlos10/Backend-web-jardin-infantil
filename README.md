@@ -14,12 +14,30 @@ DB_USER=root
 DB_PASS=password
 ```
 
-Aagregar las contrasena se application y correo en las variables de entorno. 
-correlo electronico y contrasena de application. 
+## Configuracion para correos electronicos
+
+Que provedor usar ->
 ```
-CORREO_ELECTRONICO=app@gmail.com 
-PASSWORD_EMAIL_APLICATION=abcdef bdedf
+email.provider=mailtrap
 ```
+
+## Agrega en tu envs
+```
+email.mailtrap.token=${MAILTRAP_TOKEN}
+email.mailtrap.inbox-id=${MAILTRAP_INBOX_ID}
+email.mailtrap.from-email=${MAILTRAP_FROM_EMAIL}
+email.mailtrap.from-name=${MAILTRAP_FROM_NAME}
+```
+
+## en caso de otro distinto:  ejemplo: 
+
+```
+email.provider=mailsend
+email.mailersend.api-key=${MAILERSEND_API_KEY}
+email.mailersend.from-email=${MAILERSEND_FROM_EMAIL}
+email.mailersend.from-name=${MAILERSEND_FROM_NAME}
+```
+
 
 
 Para poder correr la app con esas configuraciones.
@@ -27,8 +45,10 @@ Para poder correr la app con esas configuraciones.
 ```
 mvn spring-boot:run "-Dspring-boot.run.profiles=dev"
 ```
-
 O en su defecto. agregar variables en su editor o sistema.
+
+
+
 
 ## Migraciones
 
@@ -94,3 +114,5 @@ Para asignar roles específicos (ACUDIENTE o ADMINISTRADOR), esto debe hacerse p
 ```
  java "-Dspring.profiles.active=dev" -jar ./target/jar_name.jar.jar
 ```
+
+
