@@ -22,9 +22,9 @@ public class MatriculaService {
     private final EstudianteRepository estudianteRepository;
     private final EventManager eventManager;
 
-    public MatriculaService(MatriculaRepository matriculaRepository, 
-                           EstudianteRepository estudianteRepository,
-                           EventManager eventManager) {
+    public MatriculaService(MatriculaRepository matriculaRepository,
+            EstudianteRepository estudianteRepository,
+            EventManager eventManager) {
         this.matriculaRepository = matriculaRepository;
         this.estudianteRepository = estudianteRepository;
         this.eventManager = eventManager;
@@ -44,9 +44,10 @@ public class MatriculaService {
         matricula.setEstadoMatricula(EstadoMatricula.ACTIVA);
 
         Matricula savedMatricula = matriculaRepository.save(matricula);
-        
+
         // Notificar evento usando patrón Observer
         eventManager.notify(EventType.MATRICULA_CREADA.getValue(), savedMatricula);
+
         return mapToResponse(savedMatricula, estudiante.getNombre() + " " + estudiante.getPrimerApellido());
     }
 
