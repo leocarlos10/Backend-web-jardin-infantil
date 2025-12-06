@@ -77,6 +77,20 @@ public class UserRepositoryImpl implements UserRepository {
         }
     }
 
+    @Override
+    public void updateRol(Long id, String rol) {
+        String sql =
+            "UPDATE usuario SET tipo_usuario = ?, updated_at = CURRENT_TIMESTAMP WHERE usuario_id = ?";
+
+        int rowsUpdated = jdbcTemplate.update(sql, rol, id);
+
+        if (rowsUpdated == 0) {
+            throw new RuntimeException(
+                "Usuario con ID " + id + " no encontrado"
+            );
+        }
+    }
+
     private Usuario mapRowToUsuario(ResultSet rs) throws SQLException {
         Usuario user = new Usuario();
         user.setUsuarioId(rs.getLong("usuario_id"));

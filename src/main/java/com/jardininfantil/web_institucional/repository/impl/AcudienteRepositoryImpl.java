@@ -30,7 +30,6 @@ public class AcudienteRepositoryImpl implements AcudienteRepository {
         acudiente.setSegundoNombre(rs.getString("segundo_nombre"));
         acudiente.setApellido(rs.getString("primer_apellido"));
         acudiente.setSegundoApellido(rs.getString("segundo_apellido"));
-       // acudiente.setTipoDocumento(rs.getString("tipo_documento"));
         acudiente.setNumeroDocumento(rs.getString("cedula"));
         acudiente.setTelefono(rs.getString("telefono"));
         acudiente.setCorreo(rs.getString("correo"));
@@ -43,7 +42,7 @@ public class AcudienteRepositoryImpl implements AcudienteRepository {
 
     @Override
     public Acudiente save(Acudiente acudiente) {
-        String sql = "INSERT INTO acudiente (usuario_id, nombre, apellido, tipo_documento, numero_documento, telefono, correo, direccion, ocupacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO acudiente (usuario_id, nombre, primer_apellido, cedula, telefono, correo, direccion, ocupacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -51,12 +50,11 @@ public class AcudienteRepositoryImpl implements AcudienteRepository {
             ps.setLong(1, acudiente.getUsuarioId());
             ps.setString(2, acudiente.getNombre());
             ps.setString(3, acudiente.getApellido());
-            ps.setString(4, acudiente.getTipoDocumento());
-            ps.setString(5, acudiente.getNumeroDocumento());
-            ps.setString(6, acudiente.getTelefono());
-            ps.setString(7, acudiente.getCorreo());
-            ps.setString(8, acudiente.getDireccion());
-            ps.setString(9, acudiente.getOcupacion());
+            ps.setString(4, acudiente.getNumeroDocumento());
+            ps.setString(5, acudiente.getTelefono());
+            ps.setString(6, acudiente.getCorreo());
+            ps.setString(7, acudiente.getDireccion());
+            ps.setString(8, acudiente.getOcupacion());
             return ps;
         }, keyHolder);
 
@@ -86,18 +84,17 @@ public class AcudienteRepositoryImpl implements AcudienteRepository {
 
     @Override
     public Optional<Acudiente> findByNumeroDocumento(String numeroDocumento) {
-        String sql = "SELECT * FROM acudiente WHERE numero_documento = ?";
+        String sql = "SELECT * FROM acudiente WHERE cedula = ?";
         List<Acudiente> acudientes = jdbcTemplate.query(sql, rowMapper, numeroDocumento);
         return acudientes.isEmpty() ? Optional.empty() : Optional.of(acudientes.get(0));
     }
 
     @Override
     public void update(Acudiente acudiente) {
-        String sql = "UPDATE acudiente SET nombre = ?, apellido = ?, tipo_documento = ?, numero_documento = ?, telefono = ?, correo = ?, direccion = ?, ocupacion = ? WHERE acudiente_id = ?";
+        String sql = "UPDATE acudiente SET nombre = ?, primer_apellido = ?,  cedula = ?, telefono = ?, correo = ?, direccion = ?, ocupacion = ? WHERE acudiente_id = ?";
         jdbcTemplate.update(sql,
                 acudiente.getNombre(),
                 acudiente.getApellido(),
-                acudiente.getTipoDocumento(),
                 acudiente.getNumeroDocumento(),
                 acudiente.getTelefono(),
                 acudiente.getCorreo(),

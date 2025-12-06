@@ -7,5 +7,6 @@ public interface UserRepository {
     Optional<Usuario> findByEmail(String email);
     Boolean existsByEmail(String email);
     void save(Usuario usuario);
+    void updateRol(Long id , String Rol);
     Optional<Usuario> findById(Long id);
 }
