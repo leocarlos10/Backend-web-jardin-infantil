@@ -12,7 +12,7 @@ public class CaracterizacionRequest {
     private Long estudiante_id;
     private boolean beneficiario_renta_ciudadana;
     private int numero_miembro_familia;
-    private String estrato_sisben;
+    private boolean afiliado_sisben;
     private String nivel_sisben;
     private String EPS;
     private String regimen_contributivo;

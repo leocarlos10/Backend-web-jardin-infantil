@@ -1,3 +1,5 @@
+DROP PROCEDURE IF EXISTS sp_get_dashboard_stats;
+
 CREATE  PROCEDURE sp_get_dashboard_stats()
 BEGIN
     SELECT
