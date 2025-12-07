@@ -41,7 +41,7 @@ public class EstudianteRequest {
     private String sexo;
     
     @NotNull(message = "Tipo de sangre es requerido")
-    private Integer tipoSangre;
+    private String tipoSangre;
    
     @NotNull(message = "Lugar de naciemiento requerido")
     private String lugarNacimiento;

@@ -19,7 +19,7 @@ public class Estudiante {
     private String numeroRegistroCivil;
     private LocalDate fechaExp;
     private LocalDate fechaNacimiento;
-    private Integer tipoSangre;
+    private String tipoSangre;
     private String sexo;
     private String correoPadres;
     private Integer edad;

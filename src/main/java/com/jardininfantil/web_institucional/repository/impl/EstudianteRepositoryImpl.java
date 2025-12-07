@@ -34,7 +34,7 @@ public class EstudianteRepositoryImpl implements EstudianteRepository {
         estudiante.setNumeroRegistroCivil(rs.getString("numero_registro_civil"));
         estudiante.setFechaExp(rs.getDate("fecha_exp") != null ? rs.getDate("fecha_exp").toLocalDate() : null);
         estudiante.setFechaNacimiento(rs.getDate("fecha_nacimiento").toLocalDate());
-        estudiante.setTipoSangre(rs.getInt("tipo_sangre"));
+        estudiante.setTipoSangre(rs.getString("tipo_sangre"));
         estudiante.setSexo(rs.getString("sexo"));
         estudiante.setCorreoPadres(rs.getString("correo_padres"));
         estudiante.setEdad(rs.getInt("edad"));
