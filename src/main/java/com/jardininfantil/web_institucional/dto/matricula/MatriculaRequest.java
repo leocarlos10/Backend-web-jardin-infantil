@@ -24,11 +24,8 @@ public class MatriculaRequest {
     @NotBlank(message = "El grado es requerido")
     private String grado;
 
-    @NotNull(message = "El valor total es requerido")
-    @Positive(message = "El valor debe ser positivo")
     private BigDecimal valorTotal;
 
-    @NotNull(message = "El contrato firmado es requerido")
     private BigDecimal contratoFirmado;
 
     @NotBlank(message = "El estado de matrícula es requerido")

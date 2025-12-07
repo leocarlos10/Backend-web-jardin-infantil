@@ -53,7 +53,7 @@ public class MatriculaService {
         matricula.setGrado(request.getGrado());
         matricula.setValorTotal(request.getValorTotal());
         matricula.setContratoFirmado(request.getContratoFirmado());
-        matricula.setEstadoMatricula(EstadoMatricula.ACTIVA);
+        matricula.setEstadoMatricula(EstadoMatricula.valueOf(request.getEstadoMatricula()));
 
         Matricula savedMatricula = matriculaRepository.save(matricula);
 

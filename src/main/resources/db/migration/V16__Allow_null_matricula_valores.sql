@@ -1,0 +1,3 @@
+ALTER TABLE matricula 
+MODIFY COLUMN valor_total DECIMAL(12,2) NULL,
+MODIFY COLUMN contrato_firmado DECIMAL(12,2) NULL;
