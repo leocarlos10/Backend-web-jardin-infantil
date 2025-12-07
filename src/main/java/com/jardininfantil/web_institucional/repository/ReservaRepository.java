@@ -14,6 +14,8 @@ public interface ReservaRepository {
 
     List<Reserva> findByEstudianteId(Long estudianteId);
 
+    List<Reserva> verMisReservas(Long estudianteId);
+    
     List<Reserva> findByEstadoReserva(String estado);
 
     void update(Reserva reserva);

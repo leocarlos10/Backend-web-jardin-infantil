@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,6 +45,18 @@ public class ReservaController {
                 .build();
         return ResponseEntity.ok(response);
     }
+    
+    @GetMapping("/me")
+    public ResponseEntity<Response<List<ReservaResponse>>> misReservas( Authentication authentication) {
+        List<ReservaResponse> reservas = reservaService.misReservas(authentication);
+        Response<List<ReservaResponse>> response = Response.<List<ReservaResponse>>builder()
+                .responseCode(HttpStatus.OK.value())
+                .responseMessage("Lista de reservas obtenida")
+                .data(reservas)
+                .build();
+        return ResponseEntity.ok(response);
+    }
+    
 
     @GetMapping("/{id}")
     public ResponseEntity<Response<ReservaResponse>> obtenerReserva(@PathVariable Long id) {

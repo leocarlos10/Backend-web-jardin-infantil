@@ -63,6 +63,12 @@ public class ReservaRepositoryImpl implements ReservaRepository {
         String sql = "SELECT * FROM reserva_cupo ORDER BY created_at DESC";
         return jdbcTemplate.query(sql, rowMapper);
     }
+    
+    @Override
+    public List<Reserva> verMisReservas(Long estudianteId) {
+        String sql = "SELECT * FROM reserva_cupo WHERE estudiante_id = ? ORDER BY created_at DESC";
+        return jdbcTemplate.query(sql, rowMapper ,estudianteId );
+    }
 
     @Override
     public List<Reserva> findByEstudianteId(Long estudianteId) {
