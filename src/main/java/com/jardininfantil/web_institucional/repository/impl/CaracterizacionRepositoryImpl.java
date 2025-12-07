@@ -28,7 +28,7 @@ public class CaracterizacionRepositoryImpl
                 estudiante_id,
                 beneficiario_renta_ciudadana,
                 numero_miembro_familia,
-                estrato_sisben,
+                afiliado_sisben,
                 nivel_sisben,
                 eps,
                 regimen_contributivo,
@@ -67,7 +67,7 @@ public class CaracterizacionRepositoryImpl
                 ps.setInt(index++, caracterizacion.getNumero_miembro_familia());
 
                 // Campos que pueden ser null si no se seleccionaron
-                ps.setString(index++, caracterizacion.getEstrato_sisben());
+                ps.setBoolean(index++, caracterizacion.isAfiliado_sisben());
                 ps.setString(index++, caracterizacion.getNivel_sisben());
                 ps.setString(index++, caracterizacion.getEPS());
                 ps.setString(

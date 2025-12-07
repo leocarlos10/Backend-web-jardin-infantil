@@ -27,7 +27,7 @@ public class CaracterizacionService {
                     request.isBeneficiario_renta_ciudadana()
                 )
                 .numero_miembro_familia(request.getNumero_miembro_familia())
-                .estrato_sisben(request.getEstrato_sisben())
+                .afiliado_sisben(request.isAfiliado_sisben())
                 .nivel_sisben(request.getNivel_sisben())
                 .EPS(request.getEPS())
                 .regimen_contributivo(request.getRegimen_contributivo())
@@ -80,7 +80,7 @@ public class CaracterizacionService {
             .numero_miembro_familia(
                 caracterizacionSaved.getNumero_miembro_familia()
             )
-            .estrato_sisben(caracterizacionSaved.getEstrato_sisben())
+            .afiliado_sisben(caracterizacionSaved.isAfiliado_sisben())
             .nivel_sisben(caracterizacionSaved.getNivel_sisben())
             .EPS(caracterizacionSaved.getEPS())
             .regimen_contributivo(
