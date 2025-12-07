@@ -1,6 +1,9 @@
-package com.jardininfantil.web_institucional.models;
+
+
+package com.jardininfantil.web_institucional.dto.familiar;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Familiar {
+public class FamiliarResponse {
 
     private Long estudiante_id;
     private String nombre;
@@ -28,4 +31,8 @@ public class Familiar {
     private String nivel_educativo;
     private String ocupacion;
     private String tipo_familiar;
+
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }
+ 
