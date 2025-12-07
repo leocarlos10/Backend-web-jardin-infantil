@@ -1,0 +1,2 @@
+ALTER TABLE reserva_cupo 
+MODIFY estado_reserva ENUM('ACEPTADA', 'RECHAZADA', 'PENDIENTE') NOT NULL;

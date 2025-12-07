@@ -63,7 +63,6 @@ Como crear una migracion:
 ```
 V1__Create_usuario_table.sql  ✅
 V2__Add_email_column.sql      ✅
-V1_1__Fix_constraints.sql     ✅ (versiones con puntos)
 V20241121__Initial_schema.sql ✅ (fechas como versión)
 ```
 
