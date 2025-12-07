@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -67,6 +68,18 @@ public class MatriculaController {
                 .build();
         return ResponseEntity.ok(response);
     }
+    
+    @GetMapping("/me")
+    public ResponseEntity<Response<List<MatriculaResponse>>> misMatriculas( Authentication authentication) {
+        List<MatriculaResponse> matriculas = matriculaService.misMatriculas(authentication);
+        Response<List<MatriculaResponse>> response = Response.<List<MatriculaResponse>>builder()
+                .responseCode(HttpStatus.OK.value())
+                .responseMessage("Lista de matriculas obtenida")
+                .data(matriculas)
+                .build();
+        return ResponseEntity.ok(response);
+    }
+    
 
     @PutMapping("/{id}/actualizar")
     public ResponseEntity<Response<MatriculaResponse>> actualizarMatricula(

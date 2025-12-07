@@ -5,12 +5,17 @@ import com.jardininfantil.web_institucional.dto.matricula.MatriculaResponse;
 import com.jardininfantil.web_institucional.exception.NotFoundException;
 import com.jardininfantil.web_institucional.models.Estudiante;
 import com.jardininfantil.web_institucional.models.Matricula;
+import com.jardininfantil.web_institucional.models.Usuario;
+import com.jardininfantil.web_institucional.models.Acudiente;
 import com.jardininfantil.web_institucional.models.enums.EstadoMatricula;
 import com.jardininfantil.web_institucional.pattern.observer.EventManager;
 import com.jardininfantil.web_institucional.pattern.observer.EventType;
 import com.jardininfantil.web_institucional.repository.EstudianteRepository;
 import com.jardininfantil.web_institucional.repository.MatriculaRepository;
 import org.springframework.stereotype.Service;
+import com.jardininfantil.web_institucional.repository.AcudienteRepository;
+import com.jardininfantil.web_institucional.repository.UserRepository;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,13 +26,20 @@ public class MatriculaService {
     private final MatriculaRepository matriculaRepository;
     private final EstudianteRepository estudianteRepository;
     private final EventManager eventManager;
+    private final UserRepository userRepository;
+    private final AcudienteRepository acudienteRepository;
 
     public MatriculaService(MatriculaRepository matriculaRepository,
             EstudianteRepository estudianteRepository,
-            EventManager eventManager) {
+            EventManager eventManager ,
+            UserRepository userRepository,
+            AcudienteRepository acudienteRepository
+    ) {
         this.matriculaRepository = matriculaRepository;
         this.estudianteRepository = estudianteRepository;
         this.eventManager = eventManager;
+        this.userRepository = userRepository;
+        this.acudienteRepository = acudienteRepository;
     }
 
     public MatriculaResponse crearMatricula(MatriculaRequest request) {
@@ -97,6 +109,35 @@ public class MatriculaService {
         return mapToResponseSimple(matricula);
     }
 
+    
+    public List<MatriculaResponse> misMatriculas(Authentication authentication) {
+        String userEmail = authentication.getName();
+        Usuario user = userRepository
+            .findByEmail(userEmail)
+            .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
+
+        Acudiente acudiente = acudienteRepository
+            .findByUsuarioId(user.getUsuarioId())
+            .orElseThrow(() ->
+                new NotFoundException("Acudiente no encontrado")
+            );
+
+        List<Estudiante> estudiantes = estudianteRepository.findByAcudienteId(
+            acudiente.getAcudienteId()
+        );
+        if (estudiantes.isEmpty()) {
+            throw new NotFoundException("Estudiante no encontrado");
+        }
+
+        return estudiantes
+            .stream()
+            .flatMap(est ->
+                matriculaRepository.verMisMatriculas(est.getEstudianteId()).stream()
+            )
+            .map(this::mapToResponseSimple)
+            .collect(Collectors.toList());
+    }
+    
     private MatriculaResponse mapToResponse(Matricula matricula, String nombreEstudiante) {
         return MatriculaResponse.builder()
                 .idMatricula(matricula.getIdMatricula())

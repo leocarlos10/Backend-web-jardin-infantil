@@ -84,6 +84,12 @@ public class MatriculaRepositoryImpl implements MatriculaRepository {
     }
 
     @Override
+    public List<Matricula> verMisMatriculas(Long estudianteId) {
+        String sql = "SELECT * FROM matricula WHERE estudiante_id = ? ORDER BY created_at DESC";
+        return jdbcTemplate.query(sql, rowMapper ,estudianteId );
+    }
+    
+    @Override
     public void update(Matricula matricula) {
         String sql = "UPDATE matricula SET fecha = ?, grado = ?, valor_total = ?, contrato_firmado = ?, estado_matricula = ? WHERE id_matricula = ?";
         jdbcTemplate.update(sql,

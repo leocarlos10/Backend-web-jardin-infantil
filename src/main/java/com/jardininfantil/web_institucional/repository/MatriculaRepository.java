@@ -11,6 +11,8 @@ public interface MatriculaRepository {
     Optional<Matricula> findById(Long id);
 
     List<Matricula> findAll();
+    
+    List<Matricula> verMisMatriculas(Long estudianteId);
 
     List<Matricula> findByEstudianteId(Long estudianteId);
 
