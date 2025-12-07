@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import java.sql.Date;
 
 @Repository
 public class FamiliarRepositoryImpl implements FamiliarRepository {
@@ -24,7 +25,7 @@ public class FamiliarRepositoryImpl implements FamiliarRepository {
     @Override
     public Familiar save(Familiar familiar) {
         String sql = """
-                INSERT INTO acudiente (
+                INSERT INTO familiar (
                     estudiante_id,
                     nombre,
                     segundo_nombre,
@@ -41,7 +42,7 @@ public class FamiliarRepositoryImpl implements FamiliarRepository {
                     nivel_educativo,
                     ocupacion,
                     tipo_familiar
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?)
+                    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             """;
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -57,22 +58,22 @@ public class FamiliarRepositoryImpl implements FamiliarRepository {
                 ps.setString(4, familiar.getPrimer_apellido());
                 ps.setString(5, familiar.getSegundo_apellido());
                 ps.setString(6, familiar.getCedula());
-                ps.setString(7, familiar.getFecha_expedicion_documento());
-                ps.setString(8, familiar.getFecha_nacimiento());
-                ps.setLong(9, familiar.getMunicipio());
+                ps.setDate(7, Date.valueOf( familiar.getFecha_expedicion_documento()));
+                ps.setDate(8, Date.valueOf( familiar.getFecha_nacimiento()));
+                ps.setString(9, familiar.getMunicipio());
                 ps.setString(10, familiar.getDireccion());
                 ps.setString(11, familiar.getBarrio());
                 ps.setString(12, familiar.getTelefono());
                 ps.setString(13, familiar.getCorreo());
                 ps.setString(14, familiar.getNivel_educativo());
-                ps.setString(15, familiar.getocupacion());
-                ps.setString(16, familiar.tipo_familiar());
+                ps.setString(15, familiar.getOcupacion());
+                ps.setString(16, familiar.getTipo_familiar());
                 return ps;
             },
             keyHolder
         );
 
-        familiar.setAcudienteId(keyHolder.getKey().longValue());
+        familiar.setEstudiante_id(keyHolder.getKey().longValue());
         return familiar;
     }
 }

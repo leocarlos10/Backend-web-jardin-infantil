@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class FamiliarRequest {
 
-    @NotBlank(message = "obligatorio")
+    @NotNull(message = "obligatorio")
     private Long estudiante_id;
 
     @NotBlank(message = "obligatorio")
@@ -35,7 +35,7 @@ public class FamiliarRequest {
     @NotNull(message = "obligatorio")
     private LocalDate fecha_expedicion_documento;
 
-    @NotBlank(message = "obligatorio")
+    @NotNull(message = "obligatorio")
     private LocalDate fecha_nacimiento;
 
     @NotBlank(message = "obligatorio")

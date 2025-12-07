@@ -24,7 +24,7 @@ public class FamiliarController {
 
     @PostMapping
     public ResponseEntity<Response<FamiliarResponse>> createCaracterizacion(
-        @RequestBody FamiliarRequest request
+      @Valid  @RequestBody FamiliarRequest request
     ) {
         FamiliarResponse familiar = familiarService.crearFamiliar(request);
 
