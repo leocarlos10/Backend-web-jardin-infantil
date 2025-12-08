@@ -95,7 +95,6 @@ public class MatriculaController {
     }
 
     @PutMapping("/{id}/cancelar")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Response<MatriculaResponse>> cancelarMatricula(@PathVariable Long id) {
         MatriculaResponse matricula = matriculaService.cancelarMatricula(id);
         Response<MatriculaResponse> response = Response.<MatriculaResponse>builder()
